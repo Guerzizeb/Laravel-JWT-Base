@@ -8,7 +8,7 @@ trait ResponseTrait {
 		$response = [
 			'code' => 201,
 			'status' => 'succcess',
-			'data' => $data
+			'item' => $data
 		];
 		
 		return response()->json($response, $response['code']);
@@ -18,7 +18,7 @@ trait ResponseTrait {
 		$response = [
 			'code' => 200,
 			'status' => 'succcess',
-			'data' => $data
+			'item' => $data
 		];
 		
 		return response()->json($response, $response['code']);
@@ -28,7 +28,7 @@ trait ResponseTrait {
 		$response = [
 			'code' => 200,
 			'status' => 'succcess',
-			'data' => $data
+			'items' => $data
 		];
 
 		return response()->json($response, $response['code']);
@@ -48,7 +48,7 @@ trait ResponseTrait {
 		$response = [
 			'code' => 204,
 			'status' => 'success',
-			'data' => [],
+			'item' => [],
 			'message' => 'Resource deleted'
 		];
 
@@ -59,7 +59,7 @@ trait ResponseTrait {
 		$response = [
 			'code' => 422,
 			'status' => 'error',
-			'data' => $data,
+			'item' => $data,
 			'message' => 'Unprocessable entity'
 		];
 
