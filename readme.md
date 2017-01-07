@@ -1,5 +1,5 @@
 # Server
-A Laravel 5.3 Server for serving API DATA
+A Laravel 5.3 application for serving API data
 * Laravel v5.3
 * JWT Token Based Auth (crypted token) `"tymon/jwt-auth": "0.5.*"`
 
