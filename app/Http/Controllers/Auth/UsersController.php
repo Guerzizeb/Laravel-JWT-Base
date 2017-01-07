@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\ResponseTrait;
 use Illuminate\Http\Request;
 
-use App\User;
+use App\Models\User;
 
 class UsersController extends Controller {
 
@@ -25,7 +25,8 @@ class UsersController extends Controller {
 	}
 
 	public function store(Request $request) {
-		try {
+
+	    try {
 			$v = \Validator::make($request->all(), [
 					'name' => "required|min:3|unique:users",
 					'email' => 'required|email',
@@ -36,13 +37,8 @@ class UsersController extends Controller {
 				throw new \Exception("ValidationException");
 			}
 
+			$user = User::create($request->all());
 
-			$user = User::create();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = bcrypt($request->password);
-			$user->save(); 
-			
 			return $this->createdResponse($user);
 
 		} catch(\Exception $ex) {

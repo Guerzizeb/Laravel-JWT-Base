@@ -1,6 +1,15 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Models\User;
+
+function rest($path, $controller) {
+    Route::get($path, $controller.'@index');
+    Route::post($path, $controller.'@store');
+    Route::get($path.'/{id}', $controller.'@show');
+    Route::put($path.'/{id}', $controller.'@update');
+    Route::delete($path.'/{id}', $controller.'@destroy');
+}
 
 Route::group(['middleware' => ['jwt.auth']], function () {
 
@@ -8,22 +17,12 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         return $request->user();
     });
 
-    Route::get('/test', function (Request $request) {
-        return 'Get ok';
-    });
-
-    Route::post('/test', function (Request $request) {
-        return 'Post ok';
-    });
-
-    Route::get('/users', function () {
-        return response(['users' => App\User::all(), 'message' => 'success']);
-    });
+    rest('users', 'Auth\UsersController');
 
 });
 
 Route::post('/register', [
-    'uses' => 'Auth\AuthenticateController@register',
+    'uses' => 'Auth\UsersController@store',
 ]);
 
 Route::post('/login', [
