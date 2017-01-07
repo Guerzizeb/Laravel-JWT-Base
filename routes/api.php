@@ -9,7 +9,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         return $request->user();
     });
 
-    rest('users', 'Auth\UsersController');
     Route::resource('users', 'Auth\UsersController');
 });
 
