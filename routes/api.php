@@ -2,6 +2,16 @@
 
 use Illuminate\Http\Request;
 
+// Authentication route
+Route::post('/login', [
+    'uses' => 'Auth\AuthenticateController@login',
+]);
+
+// Guest routes
+Route::post('/register', [
+    'uses' => 'UsersController@store',
+]);
+
 // Protected routes
 Route::group(['middleware' => ['jwt.auth']], function () {
 
@@ -9,14 +19,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
         return $request->user();
     });
 
-    Route::resource('users', 'Auth\UsersController');
+    Route::resource('users', 'UsersController');
 });
 
-// Guest routes
-Route::post('/register', [
-    'uses' => 'Auth\UsersController@store',
-]);
-
-Route::post('/login', [
-    'uses' => 'Auth\AuthenticateController@login',
-]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResponseTrait;
@@ -30,14 +30,19 @@ class UsersController extends Controller {
 			$v = \Validator::make($request->all(), [
 					'name' => "required|min:3|unique:users",
 					'email' => 'required|email',
-					'password' => 'required|min:6'
+					'password' => 'required|min:6|confirmed',
+                    'password_confirmation' => 'required'
 				]);
 
 			if($v->fails()) {
 				throw new \Exception("ValidationException");
 			}
 
-			$user = User::create($request->all());
+			$user = User::create([
+			    'name' => $request->json('name'),
+                'email' => $request->json('email'),
+                'password' => bcrypt($request->json('password'))
+                ]);
 
 			return $this->createdResponse($user);
 
@@ -48,7 +53,7 @@ class UsersController extends Controller {
 	}
 
 	public function update(Request $request, $id) {
-		if (!$data = User::find($id)) {
+		if (!$user = User::find($id)) {
 			return $this->notFoundResponse();   
 		}
 
@@ -56,29 +61,37 @@ class UsersController extends Controller {
 			$v = \Validator::make($request->all(), [
 					'name' => "required|min:3|unique:users,name,$id",
 					'email' => 'required|email',
-					'password' => 'min:6'
+					'password' => 'min:6|confirmed'
 				]);
 
 			if($v->fails()) {
 				throw new \Exception("ValidationException");
 			}
 
-			$data->fill($request->all());
-			$data->save();
+			if ($user->name != $request->json('name')) {
+			    $user->name = $request->json('name');
+            }
+            if ($user->email != $request->json('email')) {
+                $user->email = $request->json('email');
+            }
+            if ($request->json('password')) {
+                $user->password = $request->json('password');
+            }
+
+			$user->save();
 			
-			return $this->showResponse($data);
+			return $this->showResponse($user);
 		} catch(\Exception $ex) {
-			$data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
+            $data = ['form_validations' => $v->errors(), 'exception' => $ex->getMessage()];
 			return $this->clientErrorResponse($data);
 		}
 	}
-
 
 	public function destroy($id) {
 		if(!$data = User::find($id)) {
 			return $this->notFoundResponse();   
 		}
-		
+
 		$data->delete();
 		return $this->deletedResponse();
 	}
