@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use JWTAuth;
 
 // Authentication route
 Route::post('/login', [
@@ -13,12 +14,18 @@ Route::post('/register', [
 ]);
 
 // Protected routes
-Route::group(['middleware' => ['jwt.auth']], function () {
+Route::group(['middleware' => 'jwt.auth'], function () {
 
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
     Route::resource('users', 'UsersController');
+});
+
+Route::group(['middleware' => ['jwt.auth', 'jwt.refresh']], function () {
+    Route::get('refresh-token', function (Request $request) {
+        return $token = JWTAuth::getToken();;
+    });
 });
 

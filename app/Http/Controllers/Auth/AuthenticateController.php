@@ -33,10 +33,13 @@ class AuthenticateController extends Controller {
             return response()->json($response, $response['code']);
         }
 
+        $user = User::where('email', $request->json('email'))->first();
+
         $response = [
             'code' => 200,
-            'status' => 'error',
+            'status' => 'sccess',
             'token' => $token,
+            'user' => $user,
             'message' => 'Login success'
         ];
 
