@@ -29,7 +29,7 @@ class UsersController extends Controller {
 	    try {
 			$v = \Validator::make($request->all(), [
 					'name' => "required|min:3|unique:users",
-					'email' => 'required|email',
+					'email' => 'required|email|unique:users,email',
 					'password' => 'required|min:6|confirmed',
                     'password_confirmation' => 'required'
 				]);
@@ -60,7 +60,7 @@ class UsersController extends Controller {
 		try {
 			$v = \Validator::make($request->all(), [
 					'name' => "required|min:3|unique:users,name,$id",
-					'email' => 'required|email',
+					'email' => "required|email|unique:users,email,$id",
 					'password' => 'min:6|confirmed'
 				]);
 
@@ -104,4 +104,12 @@ class UsersController extends Controller {
 		$data = $user->contacts;
 		return $this->listResponse($data);
 	}
+
+	public function getDashboard () {
+	    $data = [];
+        $data['all'] = User::count();
+        $data['admins'] = User::where('role', 'admin')->count();
+        $data['users'] = User::where('role', 'user')->count();
+        return $this->showResponse($data);
+    }
 }

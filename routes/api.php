@@ -20,6 +20,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     });
 
     Route::resource('users', 'UsersController');
+    Route::get('dashboard', 'UsersController@getDashboard');
 });
 
 Route::group(['middleware' => ['jwt.auth', 'jwt.refresh']], function () {

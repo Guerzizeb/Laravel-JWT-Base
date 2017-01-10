@@ -7,7 +7,7 @@ trait ResponseTrait {
 	protected function createdResponse($data) {
 		$response = [
 			'code' => 201,
-			'status' => 'succcess',
+			'status' => 'success',
 			'item' => $data
 		];
 		
@@ -17,7 +17,7 @@ trait ResponseTrait {
 	protected function showResponse($data) {
 		$response = [
 			'code' => 200,
-			'status' => 'succcess',
+			'status' => 'success',
 			'item' => $data
 		];
 		
@@ -27,7 +27,7 @@ trait ResponseTrait {
 	protected function listResponse($data) {
 		$response = [
 			'code' => 200,
-			'status' => 'succcess',
+			'status' => 'success',
 			'items' => $data
 		];
 
