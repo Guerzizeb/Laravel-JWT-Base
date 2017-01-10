@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use JWTAuth;
 
 // Authentication route
 Route::post('/login', [
@@ -25,7 +24,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 
 Route::group(['middleware' => ['jwt.auth', 'jwt.refresh']], function () {
     Route::get('refresh-token', function (Request $request) {
-        return $token = JWTAuth::getToken();;
+        return $token = JWTAuth::getToken();
     });
 });
 
