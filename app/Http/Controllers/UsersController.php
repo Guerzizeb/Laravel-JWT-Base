@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserAdded;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResponseTrait;
 use Illuminate\Http\Request;
@@ -12,8 +13,14 @@ class UsersController extends Controller {
 
 	use ResponseTrait;
 
-	public function index() {
-		return $this->listResponse(User::all());
+	public function index(Request $request) {
+
+        if (!empty($request->json('role'))) {
+            $users = User::where('role', $request->json('role'))->paginate(10);
+        } else {
+            $users = User::paginate(10);
+        }
+        return $this->listResponse($users);
 	}
 
 	public function show($id) {
@@ -43,6 +50,8 @@ class UsersController extends Controller {
                 'email' => $request->json('email'),
                 'password' => bcrypt($request->json('password'))
                 ]);
+
+            event(new UserAdded());
 
 			return $this->createdResponse($user);
 
@@ -75,7 +84,7 @@ class UsersController extends Controller {
                 $user->email = $request->json('email');
             }
             if ($request->json('password')) {
-                $user->password = $request->json('password');
+                $user->password = bcrypt($request->json('password'));
             }
 
 			$user->save();
@@ -105,11 +114,4 @@ class UsersController extends Controller {
 		return $this->listResponse($data);
 	}
 
-	public function getDashboard () {
-	    $data = [];
-        $data['all'] = User::count();
-        $data['admins'] = User::where('role', 'admin')->count();
-        $data['users'] = User::where('role', 'user')->count();
-        return $this->showResponse($data);
-    }
 }
