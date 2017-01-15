@@ -14,9 +14,8 @@ class UsersController extends Controller {
 	use ResponseTrait;
 
 	public function index(Request $request) {
-
-        if (!empty($request->json('role'))) {
-            $users = User::where('role', $request->json('role'))->paginate(10);
+        if ($request->role && 'all' !== $request->role) {
+            $users = User::where('role', $request->role)->paginate(10);
         } else {
             $users = User::paginate(10);
         }

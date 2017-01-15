@@ -7,7 +7,7 @@ use Closure;
 class Cors {
     
     public function handle($request, Closure $next) {
-        $domains = ['http://localhost:8080'];
+        $domains = ['http://vuejs.guerzizeb.com', 'https://vuejs.guerzizeb.com', 'http://localhost:8080'];
 
         if (isset($request->server()['HTTP_ORIGIN'])) {
             $origin = $request->server()['HTTP_ORIGIN'];
